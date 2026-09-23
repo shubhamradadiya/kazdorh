@@ -1,19 +1,27 @@
 import { FormEvent, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Building2, Check, ChevronDown, KeyRound, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Building2, Check, ChevronDown, Phone, ShieldCheck } from 'lucide-react';
+import { BrandMark } from './BrandLogo';
 
 interface LoginPageProps {
   onBack: () => void;
+  onPrivacy: () => void;
+  onTerms: () => void;
 }
 
-function LoginPage({ onBack }: LoginPageProps) {
+function LoginPage({ onBack, onPrivacy, onTerms }: LoginPageProps) {
   const [phone, setPhone] = useState('');
   const [country, setCountry] = useState('+1');
   const [submitted, setSubmitted] = useState(false);
 
+  const handlePhoneChange = (value: string) => {
+    setPhone(value.replace(/\D/g, ''));
+    setSubmitted(false);
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (phone.replace(/\D/g, '').length >= 7) setSubmitted(true);
+    if (phone.length >= 7) setSubmitted(true);
   };
 
   return (
@@ -36,11 +44,13 @@ function LoginPage({ onBack }: LoginPageProps) {
             <ArrowLeft size={18} />
           </button>
           <div className="brand-lockup">
-            <div className="brand-mark"><MapPin size={68} strokeWidth={2.1} /><KeyRound className="brand-key" size={27} strokeWidth={2.5} /></div>
-            <span>Kazd<span className="brand-o">o</span>rh</span>
+            <div className="brand-mark" aria-hidden="true">
+              <BrandMark />
+            </div>
+            <span>Nestrix</span>
           </div>
           <div className="welcome-copy">
-            <h1 id="welcome-heading">Welcome to the Kazd<span>o</span>rh!</h1>
+            <h1 id="welcome-heading">Welcome to Nestrix!</h1>
             <p>Log in to manage your property and get bookings or<br className="desktop-break" /> create a new account to get started.</p>
           </div>
         </motion.div>
@@ -74,13 +84,23 @@ function LoginPage({ onBack }: LoginPageProps) {
               <label className="number-field">
                 <Phone size={16} aria-hidden="true" />
                 <span className="sr-only">Phone number</span>
-                <input value={phone} onChange={(event) => { setPhone(event.target.value); setSubmitted(false); }} type="tel" inputMode="tel" placeholder="Phone number*" aria-label="Phone number" required />
+                <input
+                  value={phone}
+                  onChange={(event) => handlePhoneChange(event.target.value)}
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="tel-national"
+                  placeholder="Phone number*"
+                  aria-label="Phone number"
+                  required
+                />
               </label>
             </div>
             <motion.button
               className="continue-button"
               type="submit"
-              disabled={phone.replace(/\D/g, '').length < 7}
+              disabled={phone.length < 7}
               whileTap={{ scale: 0.97 }}
             >
               Continue
@@ -95,9 +115,14 @@ function LoginPage({ onBack }: LoginPageProps) {
               </motion.p>
             )}
           </form>
-          <p className="terms-copy">By signing up, you agree to Kazd<span>o</span>rh's <a href="#terms">Terms of Service</a>,<br /> and <a href="#privacy">Privacy Policy.</a></p>
+          <p className="terms-copy">
+            By signing up, you agree to Nestrix's{' '}
+            <button type="button" onClick={onTerms}>Terms of Service</button>
+            ,<br /> and{' '}
+            <button type="button" onClick={onPrivacy}>Privacy Policy</button>.
+          </p>
         </motion.div>
-        <p className="copyright">© 2025 Kazdorh. Built for better property management.</p>
+        <p className="copyright">© 2025 Nestrix. Built for better property management.</p>
       </section>
     </motion.main>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowRight,
@@ -9,8 +9,6 @@ import {
   Check,
   ChevronDown,
   CircleDollarSign,
-  KeyRound,
-  MapPin,
   Menu,
   MessageSquare,
   Play,
@@ -19,9 +17,12 @@ import {
   WalletCards,
   X,
 } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 interface LandingPageProps {
   onLogin: () => void;
+  onPrivacy: () => void;
+  onTerms: () => void;
 }
 
 const cabinImage =
@@ -30,7 +31,7 @@ const forestHomeImage =
   'https://images.pexels.com/photos/25565675/pexels-photo-25565675.png?auto=compress&cs=tinysrgb&h=650&w=940';
 
 const faqs: [string, string][] = [
-  ['Is Kazdorh only for short-term rentals?', 'Not at all. Kazdorh works beautifully for vacation rentals, furnished homes, and long-term properties in one shared workspace.'],
+  ['Is Nestrix only for short-term rentals?', 'Not at all. Nestrix works beautifully for vacation rentals, furnished homes, and long-term properties in one shared workspace.'],
   ['Can I invite my property team?', 'Yes. Bring owners, co-hosts, cleaners, and operators into the right parts of your workspace with simple team access.'],
   ['How quickly can I get started?', 'Most hosts are set up in a few minutes. Import your listings, connect your calendar, and start managing right away.'],
   ['Is my data secure?', 'Your property and guest information is protected with secure infrastructure, role-based access, and regular backups.'],
@@ -38,12 +39,21 @@ const faqs: [string, string][] = [
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-function LandingPage({ onLogin }: LandingPageProps) {
+function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 400], [0, 80]);
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.4]);
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 1024px)');
+    const sync = () => setIsDesktop(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -56,18 +66,14 @@ function LandingPage({ onLogin }: LandingPageProps) {
   return (
     <div className="min-h-screen overflow-hidden bg-[#fafafa] text-[#0a0a0a]">
       <motion.header
-        className="fixed left-0 right-0 top-0 z-50 border-b border-[#ece6f3] bg-[#fafafa]/85 backdrop-blur-xl"
+        className="fixed left-0 right-0 top-0 z-50 border-b border-[#ece6f3] bg-[#fafafa] lg:bg-[#fafafa]/85 lg:backdrop-blur-xl"
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease }}
       >
         <div className="mx-auto flex h-[74px] max-w-[1240px] items-center justify-between px-6 lg:px-10">
-          <a href="#top" className="flex items-center gap-2.5" onClick={(e) => scrollTo(e, 'top')}>
-            <span className="relative grid h-9 w-9 place-items-center rounded-[12px] bg-[#4f008c] text-white shadow-[0_8px_20px_rgba(79,0,140,0.25)]">
-              <MapPin size={18} strokeWidth={2.5} />
-              <KeyRound className="absolute -right-1 bottom-0.5" size={13} strokeWidth={2.5} style={{ transform: 'rotate(-16deg)' }} />
-            </span>
-            <span className="text-[22px] font-extrabold tracking-[-0.06em] text-[#4f008c]">Kazd<span className="text-[#d4a5ff]">o</span>rh</span>
+          <a href="#top" onClick={(e) => scrollTo(e, 'top')}>
+            <BrandLogo />
           </a>
           <nav className="hidden items-center gap-9 text-[14px] font-semibold text-[#5f5a6e] lg:flex">
             <a href="#features" onClick={(e) => scrollTo(e, 'features')} className="transition-colors hover:text-[#4f008c]">Features</a>
@@ -103,8 +109,11 @@ function LandingPage({ onLogin }: LandingPageProps) {
 
       <main id="top">
         <section className="relative mx-auto max-w-[1240px] px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-10 lg:pb-28 lg:pt-36">
-          <div className="pointer-events-none absolute -right-40 -top-32 h-[400px] w-[400px] rounded-full bg-[#f0eaff] blur-3xl sm:h-[560px] sm:w-[560px]" />
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative grid items-center gap-10 sm:gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
+          <div className="pointer-events-none absolute -right-24 -top-24 hidden h-[480px] w-[480px] rounded-full bg-[#f0eaff] opacity-80 blur-3xl lg:block" />
+          <motion.div
+            style={isDesktop ? { y: heroY, opacity: heroOpacity } : undefined}
+            className="relative grid items-center gap-10 sm:gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10"
+          >
             <div className="max-w-[560px]">
               <motion.div
                 className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#d9c9ee] bg-white px-4 py-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-[#4f008c]"
@@ -128,7 +137,7 @@ function LandingPage({ onLogin }: LandingPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2, ease }}
               >
-                Kazdorh gives modern hosts one calm, powerful place to manage listings, bookings, guests, and growth.
+                Nestrix gives modern hosts one calm, powerful place to manage listings, bookings, guests, and growth.
               </motion.p>
               <motion.div
                 className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row"
@@ -277,7 +286,7 @@ function LandingPage({ onLogin }: LandingPageProps) {
               >
                 <img src={forestHomeImage} alt="Modern home tucked into a lush forest" className="h-[260px] w-full rounded-[22px] object-cover sm:h-[340px] lg:h-[410px]" />
                 <motion.div
-                  className="absolute bottom-8 left-8 right-8 rounded-2xl border border-white/60 bg-white/90 p-4 shadow-xl backdrop-blur-sm"
+                  className="absolute bottom-8 left-8 right-8 rounded-2xl border border-[#ece6f3] bg-white p-4 shadow-xl lg:border-white/60 lg:bg-white/90 lg:backdrop-blur-sm"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -316,7 +325,7 @@ function LandingPage({ onLogin }: LandingPageProps) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2, ease }}
               >
-                From your first property to your fiftieth, Kazdorh keeps the details moving so you can focus on your guests and the life you are building.
+                From your first property to your fiftieth, Nestrix keeps the details moving so you can focus on your guests and the life you are building.
               </motion.p>
               <div className="mt-8 space-y-5">
                 {[
@@ -341,7 +350,7 @@ function LandingPage({ onLogin }: LandingPageProps) {
             >
               <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#c6a9e7]">Simple, transparent pricing</p>
               <h2 className="mt-4 max-w-[580px] text-[32px] font-extrabold leading-[1.1] tracking-[-0.04em] sm:text-[40px] sm:leading-[1.08] sm:tracking-[-0.05em] lg:text-[52px]">Start small. Make room to grow.</h2>
-              <p className="mt-4 max-w-[500px] text-[15px] leading-7 text-[#d5c8e4] sm:mt-5 sm:text-[16px]">Try the full Kazdorh experience free for 14 days. No confusing tiers, no surprise fees.</p>
+              <p className="mt-4 max-w-[500px] text-[15px] leading-7 text-[#d5c8e4] sm:mt-5 sm:text-[16px]">Try the full Nestrix experience free for 14 days. No confusing tiers, no surprise fees.</p>
             </motion.div>
             <motion.div
               className="w-full max-w-[360px] rounded-[24px] bg-white p-7 text-[#0a0a0a] shadow-2xl"
@@ -352,7 +361,7 @@ function LandingPage({ onLogin }: LandingPageProps) {
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
             >
               <div className="flex items-start justify-between">
-                <div><p className="text-sm font-extrabold">Kazdorh Pro</p><p className="mt-2 text-4xl font-extrabold tracking-[-0.06em]">$29<span className="text-sm font-bold text-[#8a8292]"> / month</span></p></div>
+                <div><p className="text-sm font-extrabold">Nestrix Pro</p><p className="mt-2 text-4xl font-extrabold tracking-[-0.06em]">$29<span className="text-sm font-bold text-[#8a8292]"> / month</span></p></div>
                 <span className="rounded-full bg-[#f0e6fb] px-3 py-1 text-[10px] font-extrabold uppercase text-[#4f008c]">Most popular</span>
               </div>
               <div className="my-6 h-px bg-[#eeeaf2]" />
@@ -413,18 +422,25 @@ function LandingPage({ onLogin }: LandingPageProps) {
         <div className="mx-auto max-w-[1150px]">
           <div className="grid gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
             <div>
-              <a href="#top" className="flex items-center gap-2.5">
-                <span className="relative grid h-9 w-9 place-items-center rounded-[12px] bg-[#4f008c] text-white"><MapPin size={19} /></span>
-                <span className="text-[22px] font-extrabold tracking-[-0.06em] text-[#4f008c]">Kazd<span className="text-[#d4a5ff]">o</span>rh</span>
+              <a href="#top">
+                <BrandLogo />
               </a>
               <p className="mt-5 max-w-[270px] text-[14px] leading-7 text-[#827b8c]">A calmer way to run the properties that make life worth living.</p>
             </div>
             <FooterGroup title="Product" links={['Features', 'How it works', 'Pricing', 'Changelog']} />
             <FooterGroup title="Company" links={['About us', 'Careers', 'Contact', 'Partners']} />
-            <FooterGroup title="Legal" links={['Privacy policy', 'Terms of service', 'Security', 'Help center']} />
+            <FooterGroup
+              title="Legal"
+              links={[
+                { label: 'Privacy policy', onClick: onPrivacy },
+                { label: 'Terms of service', onClick: onTerms },
+                { label: 'Security' },
+                { label: 'Help center' },
+              ]}
+            />
           </div>
           <div className="mt-12 flex flex-col justify-between gap-3 border-t border-[#eeeaf2] pt-6 text-[12px] font-semibold text-[#958d9e] sm:mt-14 sm:flex-row sm:gap-4">
-            <p>© 2025 Kazdorh, Inc. All rights reserved.</p>
+            <p>© 2025 Nestrix, Inc. All rights reserved.</p>
             <p>Made for hosts who care.</p>
           </div>
         </div>
@@ -497,11 +513,41 @@ function Step({ number, title, text, index }: { number: string; title: string; t
   );
 }
 
-function FooterGroup({ title, links }: { title: string; links: string[] }) {
+function FooterGroup({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<string | { label: string; onClick?: () => void }>;
+}) {
   return (
     <div>
       <p className="text-[13px] font-extrabold text-[#312b3b]">{title}</p>
-      <div className="mt-5 space-y-3">{links.map((link) => <a href="#top" key={link} className="block text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]">{link}</a>)}</div>
+      <div className="mt-5 space-y-3">
+        {links.map((link) => {
+          const label = typeof link === 'string' ? link : link.label;
+          const onClick = typeof link === 'string' ? undefined : link.onClick;
+
+          if (onClick) {
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={onClick}
+                className="block text-left text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]"
+              >
+                {label}
+              </button>
+            );
+          }
+
+          return (
+            <a href="#top" key={label} className="block text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]">
+              {label}
+            </a>
+          );
+        })}
+      </div>
     </div>
   );
 }
