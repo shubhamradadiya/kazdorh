@@ -371,14 +371,14 @@ function LandingPage() {
             <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent sm:w-32" />
             <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent sm:w-32" />
             <motion.div
-              className="flex gap-4"
+              className="flex w-max"
               animate={{ x: ['0%', '-50%'] }}
               transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
             >
               {[...testimonials, ...testimonials].map((t, i) => (
                 <div
                   key={`${t.name}-${i}`}
-                  className="flex w-[300px] shrink-0 flex-col rounded-2xl border border-[#ece7f1] bg-[#fdfcff] p-6 sm:w-[360px]"
+                  className="mr-4 flex w-[300px] shrink-0 flex-col rounded-2xl border border-[#ece7f1] bg-[#fdfcff] p-6 sm:w-[360px]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex gap-1">
@@ -386,7 +386,8 @@ function LandingPage() {
                         <Star
                           key={idx}
                           size={16}
-                          className={idx < Math.floor(t.rating) ? 'fill-[#f5a623] text-[#f5a623]' : idx < t.rating ? 'fill-[#f5a623]/50 text-[#f5a623]' : 'text-[#e5e0ea]'}
+                          className="fill-[#f5a623] text-[#f5a623]"
+                          style={idx < Math.floor(t.rating) ? undefined : idx < t.rating ? { opacity: 0.5 } : { opacity: 0, fill: 'none', color: '#e5e0ea' }}
                         />
                       ))}
                     </div>
