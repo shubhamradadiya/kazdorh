@@ -1,12 +1,8 @@
 import LegalPage, { LegalSection } from './LegalPage';
 
-interface PrivacyPolicyPageProps {
-  onBack: () => void;
-}
-
-function PrivacyPolicyPage({ onBack }: PrivacyPolicyPageProps) {
+function PrivacyPolicyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="September 23, 2025" onBack={onBack}>
+    <LegalPage title="Privacy Policy" lastUpdated="September 23, 2025">
       <p>
         Nestrix ("we," "us," or "our") respects your privacy. This Privacy Policy explains how we
         collect, use, share, and protect information when you use our property management platform,

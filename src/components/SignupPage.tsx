@@ -1,11 +1,11 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Lock, Mail } from 'lucide-react';
+import { Lock, Mail, UserPlus } from 'lucide-react';
 import AuthShell from './AuthShell';
-import { BETA_LOGIN_MESSAGE, useToast } from './Toast';
+import { BETA_SIGNUP_MESSAGE, useToast } from './Toast';
 
-function LoginPage() {
+function SignupPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [email, setEmail] = useState('');
@@ -13,15 +13,15 @@ function LoginPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    showToast(BETA_LOGIN_MESSAGE);
+    showToast(BETA_SIGNUP_MESSAGE);
   };
 
   return (
-    <AuthShell headingId="login-heading" formLabel="Sign in form">
+    <AuthShell headingId="signup-heading" formLabel="Sign up form">
       <div className="card-heading">
-        <span className="small-mark"><Building2 size={17} /></span>
-        <h2>Sign in</h2>
-        <p>Enter your email and password to continue</p>
+        <span className="small-mark"><UserPlus size={17} /></span>
+        <h2>Sign up</h2>
+        <p>Create your Nestrix account</p>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -48,30 +48,23 @@ function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Password"
               aria-label="Password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               required
             />
           </label>
         </div>
-
-        <div className="auth-row">
-          <button type="button" className="auth-link" onClick={() => navigate('/forgot-password')}>
-            Forgot password?
-          </button>
-        </div>
-
         <motion.button className="continue-button" type="submit" whileTap={{ scale: 0.97 }}>
-          Sign in
+          Create account
         </motion.button>
       </form>
 
       <p className="auth-switch">
-        Don&apos;t have an account?{' '}
-        <button type="button" onClick={() => navigate('/signup')}>Sign up</button>
+        Already have an account?{' '}
+        <button type="button" onClick={() => navigate('/login')}>Sign in</button>
       </p>
 
       <p className="terms-copy">
-        By signing in, you agree to Nestrix&apos;s{' '}
+        By signing up, you agree to Nestrix&apos;s{' '}
         <button type="button" onClick={() => navigate('/terms')}>Terms of Service</button>
         ,<br /> and{' '}
         <button type="button" onClick={() => navigate('/privacy')}>Privacy Policy</button>.
@@ -80,4 +73,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignupPage;

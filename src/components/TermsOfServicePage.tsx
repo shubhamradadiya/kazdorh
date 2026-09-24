@@ -1,12 +1,8 @@
 import LegalPage, { LegalSection } from './LegalPage';
 
-interface TermsOfServicePageProps {
-  onBack: () => void;
-}
-
-function TermsOfServicePage({ onBack }: TermsOfServicePageProps) {
+function TermsOfServicePage() {
   return (
-    <LegalPage title="Terms of Service" lastUpdated="September 23, 2025" onBack={onBack}>
+    <LegalPage title="Terms of Service" lastUpdated="September 23, 2025">
       <p>
         These Terms of Service ("Terms") govern your access to and use of Nestrix's property
         management platform, websites, and related services (the "Services"). By creating an

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowRight,
@@ -9,21 +10,13 @@ import {
   Check,
   ChevronDown,
   CircleDollarSign,
-  Menu,
   MessageSquare,
   Play,
   ShieldCheck,
-  Sparkles,
   WalletCards,
-  X,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
-
-interface LandingPageProps {
-  onLogin: () => void;
-  onPrivacy: () => void;
-  onTerms: () => void;
-}
+import SiteHeader from './SiteHeader';
 
 const cabinImage =
   'https://images.pexels.com/photos/37007316/pexels-photo-37007316.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
@@ -31,16 +24,53 @@ const forestHomeImage =
   'https://images.pexels.com/photos/25565675/pexels-photo-25565675.png?auto=compress&cs=tinysrgb&h=650&w=940';
 
 const faqs: [string, string][] = [
-  ['Is Nestrix only for short-term rentals?', 'Not at all. Nestrix works beautifully for vacation rentals, furnished homes, and long-term properties in one shared workspace.'],
-  ['Can I invite my property team?', 'Yes. Bring owners, co-hosts, cleaners, and operators into the right parts of your workspace with simple team access.'],
-  ['How quickly can I get started?', 'Most hosts are set up in a few minutes. Import your listings, connect your calendar, and start managing right away.'],
-  ['Is my data secure?', 'Your property and guest information is protected with secure infrastructure, role-based access, and regular backups.'],
+  [
+    'Is Nestrix only for short-term rentals?',
+    'No. You can run vacation rentals, furnished homes, and longer stays in the same workspace.',
+  ],
+  [
+    'Can I invite my property team?',
+    'Yes. Add owners, co-hosts, cleaners, and operators, and give each person access to what they need.',
+  ],
+  [
+    'How quickly can I get started?',
+    'Most hosts are up and running in a few minutes — add listings, connect your calendar, and start managing stays.',
+  ],
+  [
+    'Is my data secure?',
+    'Yes. We use secure infrastructure, role-based access, and regular backups to protect property and guest information.',
+  ],
+  [
+    'Does Nestrix sync with Airbnb, Booking.com, or VRBO?',
+    'You can connect external calendars so availability stays aligned and double bookings are easier to avoid.',
+  ],
+  [
+    'How does pricing work?',
+    'Nestrix Pro is $29/month with a 14-day free trial. No confusing add-ons or surprise fees on the core plan.',
+  ],
+  [
+    'Can I manage more than one property?',
+    'Yes. Nestrix is built for portfolios — run one cabin or dozens of homes from a single dashboard.',
+  ],
+  [
+    'What happens after the free trial?',
+    'If you keep your plan, billing starts at the trial rate. Cancel anytime before the trial ends and you will not be charged.',
+  ],
+  [
+    'Do you offer customer support?',
+    'Yes. Reach us by email for setup help, billing questions, or product issues — we typically reply within one business day.',
+  ],
+  [
+    'Can I cancel my subscription anytime?',
+    'Yes. Cancel from your account whenever you want. You keep access through the end of the billing period you already paid for.',
+  ],
 ];
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
+function LandingPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [activeFaq, setActiveFaq] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const { scrollY } = useScroll();
@@ -55,57 +85,23 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
     return () => media.removeEventListener('change', sync);
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.slice(1);
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }, 80);
+    return () => window.clearTimeout(timer);
+  }, [location.hash]);
 
-  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    closeMenu();
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#fafafa] text-[#0a0a0a]">
-      <motion.header
-        className="fixed left-0 right-0 top-0 z-50 border-b border-[#ece6f3] bg-[#fafafa] lg:bg-[#fafafa]/85 lg:backdrop-blur-xl"
-        initial={{ y: -80 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease }}
-      >
-        <div className="mx-auto flex h-[74px] max-w-[1240px] items-center justify-between px-6 lg:px-10">
-          <a href="#top" onClick={(e) => scrollTo(e, 'top')}>
-            <BrandLogo />
-          </a>
-          <nav className="hidden items-center gap-9 text-[14px] font-semibold text-[#5f5a6e] lg:flex">
-            <a href="#features" onClick={(e) => scrollTo(e, 'features')} className="transition-colors hover:text-[#4f008c]">Features</a>
-            <a href="#how-it-works" onClick={(e) => scrollTo(e, 'how-it-works')} className="transition-colors hover:text-[#4f008c]">How it works</a>
-            <a href="#pricing" onClick={(e) => scrollTo(e, 'pricing')} className="transition-colors hover:text-[#4f008c]">Pricing</a>
-            <a href="#about" onClick={(e) => scrollTo(e, 'about')} className="transition-colors hover:text-[#4f008c]">About us</a>
-            <a href="#contact" onClick={(e) => scrollTo(e, 'contact')} className="transition-colors hover:text-[#4f008c]">Contact</a>
-          </nav>
-          <div className="hidden items-center gap-3 lg:flex">
-            <button onClick={onLogin} className="rounded-xl border border-[#cfc6db] px-5 py-2.5 text-[14px] font-bold text-[#443d52] transition hover:border-[#4f008c] hover:text-[#4f008c]">Login</button>
-            <button onClick={onLogin} className="rounded-xl bg-[#4f008c] px-5 py-2.5 text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(79,0,140,0.18)] transition hover:-translate-y-0.5 hover:bg-[#3e006f]">Get started</button>
-          </div>
-          <button className="rounded-lg p-2 text-[#4f008c] lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button>
-        </div>
-        {menuOpen && (
-          <motion.div
-            className="absolute left-0 right-0 top-[74px] border-b border-[#e7e0ef] bg-[#fafafa] px-6 py-5 shadow-xl lg:hidden"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <nav className="flex flex-col gap-5 text-sm font-bold text-[#453d51]">
-              <a href="#features" onClick={(e) => scrollTo(e, 'features')}>Features</a>
-              <a href="#how-it-works" onClick={(e) => scrollTo(e, 'how-it-works')}>How it works</a>
-              <a href="#pricing" onClick={(e) => scrollTo(e, 'pricing')}>Pricing</a>
-              <a href="#about" onClick={(e) => scrollTo(e, 'about')}>About us</a>
-              <a href="#contact" onClick={(e) => scrollTo(e, 'contact')}>Contact</a>
-              <button onClick={() => { closeMenu(); onLogin(); }} className="mt-1 rounded-xl bg-[#4f008c] px-5 py-3 text-center text-white">Get started</button>
-            </nav>
-          </motion.div>
-        )}
-      </motion.header>
+      <SiteHeader />
 
       <main id="top">
         <section className="relative mx-auto max-w-[1240px] px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-10 lg:pb-28 lg:pt-36">
@@ -115,19 +111,11 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
             className="relative grid items-center gap-10 sm:gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10"
           >
             <div className="max-w-[560px]">
-              <motion.div
-                className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#d9c9ee] bg-white px-4 py-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-[#4f008c]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease }}
-              >
-                <Sparkles size={14} /> All-in-one rental platform
-              </motion.div>
               <motion.h1
                 className="max-w-[610px] text-[36px] font-extrabold leading-[1.08] tracking-[-0.05em] text-[#0a0a0a] sm:text-[52px] sm:leading-[1.06] sm:tracking-[-0.065em] lg:text-[72px]"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1, ease }}
+                transition={{ duration: 0.6, ease }}
               >
                 Run your properties.<br /><span className="text-[#4f008c]">Grow your freedom.</span>
               </motion.h1>
@@ -146,7 +134,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
                 transition={{ duration: 0.6, delay: 0.3, ease }}
               >
                 <motion.button
-                  onClick={onLogin}
+                  onClick={() => navigate('/signup')}
                   className="group inline-flex items-center justify-center gap-3 rounded-xl bg-[#4f008c] px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_12px_24px_rgba(79,0,140,0.2)] transition hover:bg-[#3e006f]"
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.97 }}
@@ -155,7 +143,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
                 </motion.button>
                 <motion.a
                   href="#how-it-works"
-                  onClick={(e) => scrollTo(e, 'how-it-works')}
+                  onClick={(e) => scrollToSection(e, 'how-it-works')}
                   className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#d6cedf] bg-white px-6 py-3.5 text-[15px] font-bold text-[#4b4355] transition hover:border-[#4f008c] hover:text-[#4f008c]"
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.97 }}
@@ -245,7 +233,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
           </motion.div>
         </section>
 
-        <section id="features" className="border-y border-[#eee9f3] bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
+        <section id="features" className="scroll-mt-24 border-y border-[#eee9f3] bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
           <div className="mx-auto max-w-[1150px]">
             <SectionHeading
               eyebrow="Everything in one place"
@@ -265,7 +253,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="how-it-works" className="mx-auto max-w-[1240px] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
+        <section id="how-it-works" className="scroll-mt-24 mx-auto max-w-[1240px] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
           <div className="grid items-center gap-14 lg:grid-cols-2">
             <motion.div
               className="relative"
@@ -340,7 +328,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="pricing" className="bg-[#2b1251] px-5 py-16 text-white sm:px-6 sm:py-20 lg:px-10 lg:py-24">
+        <section id="pricing" className="scroll-mt-24 bg-[#2b1251] px-5 py-16 text-white sm:px-6 sm:py-20 lg:px-10 lg:py-24">
           <div className="mx-auto flex max-w-[1100px] flex-col items-start justify-between gap-8 sm:gap-10 lg:flex-row lg:items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -373,7 +361,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
                 ))}
               </ul>
               <motion.button
-                onClick={onLogin}
+                onClick={() => navigate('/signup')}
                 className="mt-7 block w-full rounded-xl bg-[#4f008c] py-3.5 text-center text-sm font-extrabold text-white transition hover:bg-[#3e006f]"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -384,7 +372,7 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="about" className="mx-auto max-w-[900px] px-5 py-16 sm:px-6 sm:py-20 lg:py-28">
+        <section id="about" className="scroll-mt-24 mx-auto max-w-[900px] px-5 py-16 sm:px-6 sm:py-20 lg:py-28">
           <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -418,30 +406,44 @@ function LandingPage({ onLogin, onPrivacy, onTerms }: LandingPageProps) {
         </section>
       </main>
 
-      <footer id="contact" className="border-t border-[#e8e1f0] bg-white px-5 pb-8 pt-12 sm:px-6 sm:pt-14 lg:px-10">
+      <footer id="contact" className="scroll-mt-24 border-t border-[#e8e1f0] bg-white px-5 pb-8 pt-12 sm:px-6 sm:pt-14 lg:px-10">
         <div className="mx-auto max-w-[1150px]">
           <div className="grid gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
             <div>
-              <a href="#top">
+              <a href="#top" onClick={(e) => scrollToSection(e, 'top')} aria-label="Back to top">
                 <BrandLogo />
               </a>
               <p className="mt-5 max-w-[270px] text-[14px] leading-7 text-[#827b8c]">A calmer way to run the properties that make life worth living.</p>
             </div>
-            <FooterGroup title="Product" links={['Features', 'How it works', 'Pricing', 'Changelog']} />
-            <FooterGroup title="Company" links={['About us', 'Careers', 'Contact', 'Partners']} />
+            <FooterGroup
+              title="Product"
+              links={[
+                { label: 'Features', href: '#features', onClick: (e) => scrollToSection(e, 'features') },
+                { label: 'How it works', href: '#how-it-works', onClick: (e) => scrollToSection(e, 'how-it-works') },
+                { label: 'Pricing', href: '#pricing', onClick: (e) => scrollToSection(e, 'pricing') },
+                { label: 'Get started', onClick: () => navigate('/signup') },
+              ]}
+            />
+            <FooterGroup
+              title="Company"
+              links={[
+                { label: 'About us', href: '#about', onClick: (e) => scrollToSection(e, 'about') },
+                { label: 'Contact', href: '#contact', onClick: (e) => scrollToSection(e, 'contact') },
+                { label: 'Login', onClick: () => navigate('/login') },
+                { label: 'Sign up', onClick: () => navigate('/signup') },
+              ]}
+            />
             <FooterGroup
               title="Legal"
               links={[
-                { label: 'Privacy policy', onClick: onPrivacy },
-                { label: 'Terms of service', onClick: onTerms },
-                { label: 'Security' },
-                { label: 'Help center' },
+                { label: 'Privacy policy', onClick: () => navigate('/privacy') },
+                { label: 'Terms of service', onClick: () => navigate('/terms') },
               ]}
             />
           </div>
           <div className="mt-12 flex flex-col justify-between gap-3 border-t border-[#eeeaf2] pt-6 text-[12px] font-semibold text-[#958d9e] sm:mt-14 sm:flex-row sm:gap-4">
             <p>© 2025 Nestrix, Inc. All rights reserved.</p>
-            <p>Made for hosts who care.</p>
+            <p>Property tools for vacation and long-term hosts.</p>
           </div>
         </div>
       </footer>
@@ -518,33 +520,39 @@ function FooterGroup({
   links,
 }: {
   title: string;
-  links: Array<string | { label: string; onClick?: () => void }>;
+  links: Array<{
+    label: string;
+    href?: string;
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
+  }>;
 }) {
   return (
     <div>
       <p className="text-[13px] font-extrabold text-[#312b3b]">{title}</p>
       <div className="mt-5 space-y-3">
         {links.map((link) => {
-          const label = typeof link === 'string' ? link : link.label;
-          const onClick = typeof link === 'string' ? undefined : link.onClick;
-
-          if (onClick) {
+          if (link.href) {
             return (
-              <button
-                key={label}
-                type="button"
-                onClick={onClick}
-                className="block text-left text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]"
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={link.onClick}
+                className="block text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]"
               >
-                {label}
-              </button>
+                {link.label}
+              </a>
             );
           }
 
           return (
-            <a href="#top" key={label} className="block text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]">
-              {label}
-            </a>
+            <button
+              key={link.label}
+              type="button"
+              onClick={link.onClick}
+              className="block text-left text-[13px] font-semibold text-[#8a8292] transition hover:text-[#4f008c]"
+            >
+              {link.label}
+            </button>
           );
         })}
       </div>

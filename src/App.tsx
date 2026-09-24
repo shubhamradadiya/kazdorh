@@ -1,48 +1,53 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from '@/components/LandingPage';
 import LoginPage from '@/components/LoginPage';
+import SignupPage from '@/components/SignupPage';
+import ForgotPasswordPage from '@/components/ForgotPasswordPage';
 import PrivacyPolicyPage from '@/components/PrivacyPolicyPage';
 import TermsOfServicePage from '@/components/TermsOfServicePage';
+import { ToastProvider } from '@/components/Toast';
 
-type View = 'landing' | 'login' | 'privacy' | 'terms';
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
 
-function App() {
-  const [view, setView] = useState<View>('landing');
-  const [returnTo, setReturnTo] = useState<View>('landing');
+  useEffect(() => {
+    if (hash) return;
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
 
-  const openLegal = (page: 'privacy' | 'terms') => {
-    setReturnTo(view === 'privacy' || view === 'terms' ? returnTo : view);
-    setView(page);
-  };
+  return null;
+}
 
-  const closeLegal = () => setView(returnTo === 'privacy' || returnTo === 'terms' ? 'landing' : returnTo);
+function AppRoutes() {
+  const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      {view === 'landing' && (
-        <LandingPage
-          key="landing"
-          onLogin={() => setView('login')}
-          onPrivacy={() => openLegal('privacy')}
-          onTerms={() => openLegal('terms')}
-        />
-      )}
-      {view === 'login' && (
-        <LoginPage
-          key="login"
-          onBack={() => setView('landing')}
-          onPrivacy={() => openLegal('privacy')}
-          onTerms={() => openLegal('terms')}
-        />
-      )}
-      {view === 'privacy' && (
-        <PrivacyPolicyPage key="privacy" onBack={closeLegal} />
-      )}
-      {view === 'terms' && (
-        <TermsOfServicePage key="terms" onBack={closeLegal} />
-      )}
-    </AnimatePresence>
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <ToastProvider>
+        <AppRoutes />
+      </ToastProvider>
+    </BrowserRouter>
   );
 }
 
