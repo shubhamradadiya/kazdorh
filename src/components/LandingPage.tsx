@@ -8,15 +8,12 @@ import {
   Building2,
   CalendarDays,
   Check,
-  ChevronDown,
   CircleDollarSign,
   MessageSquare,
   Play,
   ShieldCheck,
   Star,
-  Users,
   WalletCards,
-  Zap,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 import SiteHeader from './SiteHeader';
@@ -117,7 +114,7 @@ function LandingPage() {
     return () => window.clearTimeout(timer);
   }, [location.hash]);
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const scrollToSection = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -448,33 +445,40 @@ function LandingPage() {
                 Start your free trial
               </motion.button>
             </motion.div>
-          </div>
+          </div> 
         </section>
 
-        <section id="get-started" className="scroll-mt-24 mx-auto max-w-[1240px] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
-          <motion.div
-            className="relative overflow-hidden rounded-[32px] bg-[#4f008c] px-6 py-14 text-center sm:px-10 sm:py-16 lg:py-20"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <div className="pointer-events-none absolute -right-20 -top-20 h-[300px] w-[300px] rounded-full bg-white/5 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-16 h-[280px] w-[280px] rounded-full bg-white/5 blur-2xl" />
-            <div className="relative">
-              <div className="mx-auto mb-6 flex max-w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-white">
-                <Zap size={14} /> Ready when you are
-              </div>
-              <h2 className="mx-auto max-w-[640px] text-[32px] font-extrabold leading-[1.1] tracking-[-0.04em] text-white sm:text-[40px] sm:leading-[1.08] sm:tracking-[-0.05em] lg:text-[52px]">
-                Your properties deserve better software.
+        <section id="get-started" className="scroll-mt-24 relative overflow-hidden bg-[#fafafa] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48%] lg:block">
+            <img
+              src={cabinImage}
+              alt=""
+              className="h-full w-full object-cover"
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa] via-[#fafafa]/40 to-transparent" />
+          </div>
+          <div className="pointer-events-none absolute -left-24 top-10 h-[360px] w-[360px] rounded-full bg-[#efe6fa] opacity-80 blur-3xl" />
+
+          <div className="relative mx-auto grid max-w-[1240px] items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+            <motion.div
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6, ease }}
+            >
+              <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#4f008c]">Get started</p>
+              <h2 className="mt-4 max-w-[560px] text-[32px] font-extrabold leading-[1.08] tracking-[-0.04em] text-[#0a0a0a] sm:text-[42px] sm:leading-[1.06] sm:tracking-[-0.05em] lg:text-[52px]">
+                Start managing stays the way you always meant to.
               </h2>
-              <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-7 text-[#e0d0f0] sm:mt-6 sm:text-[16px] sm:leading-8">
-                Join thousands of hosts who replaced spreadsheets and inbox chaos with one calm dashboard.
+              <p className="mt-5 max-w-[480px] text-[15px] leading-7 text-[#716b7e] sm:mt-6 sm:text-[16px] sm:leading-8">
+                Set up your listings, connect your calendar, and run bookings from one place — free for 14 days.
               </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <motion.button
                   onClick={() => navigate('/signup')}
-                  className="inline-flex items-center justify-center gap-3 rounded-xl bg-white px-7 py-3.5 text-[15px] font-bold text-[#4f008c] shadow-[0_12px_24px_rgba(0,0,0,0.15)] transition hover:bg-[#f5f0ff]"
+                  className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#4f008c] px-7 py-3.5 text-[15px] font-bold text-white shadow-[0_12px_24px_rgba(79,0,140,0.18)] transition hover:bg-[#3e006f]"
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -483,52 +487,135 @@ function LandingPage() {
                 <motion.a
                   href="#pricing"
                   onClick={(e) => scrollToSection(e, 'pricing')}
-                  className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/30 px-7 py-3.5 text-[15px] font-bold text-white transition hover:border-white/60 hover:bg-white/10"
+                  className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#cfc6db] bg-white px-7 py-3.5 text-[15px] font-bold text-[#443d52] transition hover:border-[#4f008c] hover:text-[#4f008c]"
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.97 }}
                 >
                   View pricing
                 </motion.a>
               </div>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[12px] font-bold text-[#e0d0f0] sm:text-[13px]">
-                <span className="flex items-center gap-2"><Check size={16} /> 14-day free trial</span>
-                <span className="flex items-center gap-2"><Check size={16} /> No credit card needed</span>
-                <span className="flex items-center gap-2"><Check size={16} /> Cancel anytime</span>
+
+              <div className="mt-10 grid max-w-[440px] grid-cols-3 gap-4 border-t border-[#ece6f3] pt-8">
+                {[
+                  { value: '14 days', label: 'Free trial' },
+                  { value: '$29', label: 'Per month' },
+                  { value: '5 min', label: 'Typical setup' },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: 0.15 + i * 0.08, ease }}
+                  >
+                    <p className="text-[18px] font-extrabold tracking-[-0.03em] text-[#4f008c] sm:text-[20px]">{item.value}</p>
+                    <p className="mt-1 text-[11px] font-semibold text-[#8a8292]">{item.label}</p>
+                  </motion.div>
+                ))}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.7, delay: 0.1, ease }}
+            >
+              <div className="relative overflow-hidden rounded-[28px] border border-[#ece6f3] shadow-[0_24px_60px_rgba(43,18,81,0.12)]">
+                <img
+                  src={rentalInteriorImage}
+                  alt="Bright rental living room ready for guests"
+                  className="aspect-[5/4] w-full object-cover lg:aspect-[4/5]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2b1251]/55 via-transparent to-transparent" />
+              </div>
+              <motion.div
+                className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-xl backdrop-blur-sm sm:left-6 sm:right-auto sm:max-w-[240px]"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.35, ease }}
+              >
+                <p className="text-[11px] font-bold text-[#4f008c]">Today&apos;s overview</p>
+                <p className="mt-2 text-[22px] font-extrabold tracking-[-0.04em] text-[#0a0a0a]">3 check-ins</p>
+                <p className="mt-1 text-[12px] font-semibold text-[#8a8292]">2 cleanings scheduled</p>
+              </motion.div>
+            </motion.div>
+          </div>
         </section>
 
-        <section id="about" className="scroll-mt-24 mx-auto max-w-[900px] px-5 py-16 sm:px-6 sm:py-20 lg:py-28">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-          >
-            <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#4f008c]">Questions, answered</p>
-            <h2 className="mt-4 text-[30px] font-extrabold tracking-[-0.04em] text-[#0a0a0a] sm:text-[38px] sm:tracking-[-0.05em] lg:text-[46px]">Let's make this easy.</h2>
-          </motion.div>
-          <div className="mt-10 divide-y divide-[#e9e3ef] rounded-[24px] border border-[#e9e3ef] bg-white px-6 sm:px-8">
-            {faqs.map(([question, answer], index) => (
-              <div key={question} className="py-5">
-                <button className="flex w-full items-center justify-between gap-4 text-left text-[15px] font-extrabold text-[#312b3b]" onClick={() => setActiveFaq(activeFaq === index ? -1 : index)}>
-                  {question}
-                  <motion.span animate={{ rotate: activeFaq === index ? 180 : 0 }} transition={{ duration: 0.3 }}>
-                    <ChevronDown size={18} className="text-[#4f008c]" />
-                  </motion.span>
-                </button>
-                <motion.div
-                  initial={false}
-                  animate={{ height: activeFaq === index ? 'auto' : 0, opacity: activeFaq === index ? 1 : 0 }}
-                  transition={{ duration: 0.3, ease }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <p className="max-w-[720px] pr-8 pt-3 text-[14px] leading-7 text-[#777080]">{answer}</p>
-                </motion.div>
-              </div>
-            ))}
+        <section id="about" className="scroll-mt-24 relative overflow-hidden bg-[#f7f4fb] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
+          <div className="pointer-events-none absolute -right-32 top-0 h-[420px] w-[420px] rounded-full bg-[#ebe0f8] opacity-70 blur-3xl" />
+          <div className="relative mx-auto grid max-w-[1240px] gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            <motion.div
+              className="lg:sticky lg:top-28 lg:self-start"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.55, ease }}
+            >
+              <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#4f008c]">FAQ</p>
+              <h2 className="mt-4 text-[32px] font-extrabold leading-[1.1] tracking-[-0.04em] text-[#0a0a0a] sm:text-[40px] sm:tracking-[-0.05em] lg:text-[46px]">
+                Common questions<br className="hidden sm:block" /> from hosts.
+              </h2>
+              <p className="mt-5 max-w-[360px] text-[15px] leading-7 text-[#716b7e] sm:text-[16px] sm:leading-8">
+                Setup, pricing, teams, and how Nestrix works for vacation and long-term rentals.
+              </p>
+            </motion.div>
+
+            <div className="divide-y divide-[#ece7f1] overflow-hidden rounded-[24px] border border-[#ece7f1] bg-[#fafafa]">
+              {faqs.map(([question, answer], index) => {
+                const open = activeFaq === index;
+                return (
+                  <motion.div
+                    key={question}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.24), ease }}
+                    className={open ? 'bg-white' : 'bg-transparent'}
+                  >
+                    <button
+                      type="button"
+                      className="group flex w-full items-center gap-4 px-5 py-5 text-left transition sm:px-7 sm:py-6"
+                      onClick={() => setActiveFaq(open ? -1 : index)}
+                      aria-expanded={open}
+                    >
+                      <span className="flex-1 text-[15px] font-extrabold leading-snug text-[#312b3b] sm:text-[16px]">
+                        {question}
+                      </span>
+                      <span
+                        className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl border transition ${
+                          open
+                            ? 'border-[#4f008c] bg-[#4f008c] text-white'
+                            : 'border-[#e0d8eb] bg-white text-[#4f008c] group-hover:border-[#4f008c]'
+                        }`}
+                        aria-hidden="true"
+                      >
+                        <motion.span
+                          animate={{ rotate: open ? 45 : 0 }}
+                          transition={{ duration: 0.25 }}
+                          className="text-[22px] font-light leading-none"
+                        >
+                          +
+                        </motion.span>
+                      </span>
+                    </button>
+                    <motion.div
+                      initial={false}
+                      animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+                      transition={{ duration: 0.3, ease }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <p className="px-5 pb-6 text-[14px] leading-7 text-[#777080] sm:px-7 sm:pr-16">
+                        {answer}
+                      </p>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </section>
       </main>
