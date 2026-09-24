@@ -13,7 +13,10 @@ import {
   MessageSquare,
   Play,
   ShieldCheck,
+  Star,
+  Users,
   WalletCards,
+  Zap,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 import SiteHeader from './SiteHeader';
@@ -22,6 +25,36 @@ const cabinImage =
   'https://images.pexels.com/photos/37007316/pexels-photo-37007316.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
 const forestHomeImage =
   'https://images.pexels.com/photos/25565675/pexels-photo-25565675.png?auto=compress&cs=tinysrgb&h=650&w=940';
+const rentalInteriorImage =
+  'https://images.pexels.com/photos/7745932/pexels-photo-7745932.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
+
+const testimonials = [
+  {
+    name: 'Marcus Reid',
+    role: 'Host · 12 properties',
+    avatar: 'https://images.pexels.com/photos/5308640/pexels-photo-5308640.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
+    quote: 'I used to spend Sundays reconciling spreadsheets. Now it takes ten minutes a week and my Sundays are mine again.',
+  },
+  {
+    name: 'Daniel Osei',
+    role: 'Co-host · 6 properties',
+    avatar: 'https://images.pexels.com/photos/14950779/pexels-photo-14950779.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
+    quote: 'The guest messaging alone pays for itself. My reviews mention how fast I reply, and that drives more bookings.',
+  },
+  {
+    name: 'Peter Langford',
+    role: 'Property manager · 30 units',
+    avatar: 'https://images.pexels.com/photos/35490803/pexels-photo-35490803.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
+    quote: 'We onboarded our whole portfolio in an afternoon. The team access means my cleaners see what they need, nothing more.',
+  },
+];
+
+const stats = [
+  { value: '12k+', label: 'Properties managed' },
+  { value: '4.9/5', label: 'Average host rating' },
+  { value: '38%', label: 'Avg. time saved weekly' },
+  { value: '99.9%', label: 'Uptime guarantee' },
+];
 
 const faqs: [string, string][] = [
   [
@@ -253,6 +286,24 @@ function LandingPage() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-[1150px] px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+          <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease }}
+              >
+                <p className="text-[32px] font-extrabold tracking-[-0.04em] text-[#4f008c] sm:text-[40px] lg:text-[48px]">{stat.value}</p>
+                <p className="mt-1 text-[12px] font-bold text-[#7c7585] sm:text-[14px]">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
         <section id="how-it-works" className="scroll-mt-24 mx-auto max-w-[1240px] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
           <div className="grid items-center gap-14 lg:grid-cols-2">
             <motion.div
@@ -328,6 +379,43 @@ function LandingPage() {
           </div>
         </section>
 
+        <section id="testimonials" className="scroll-mt-24 border-y border-[#eee9f3] bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
+          <div className="mx-auto max-w-[1150px]">
+            <SectionHeading
+              eyebrow="Loved by hosts"
+              title={<>Don't take our word <span className="text-[#4f008c]">for it.</span></>}
+              subtitle="Thousands of hosts trust Nestrix to keep their properties running smoothly."
+            />
+            <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((t, i) => (
+                <motion.div
+                  key={t.name}
+                  className="flex flex-col rounded-2xl border border-[#ece7f1] bg-[#fdfcff] p-6 transition hover:border-[#cdb2e7] hover:shadow-[0_16px_30px_rgba(79,0,140,0.08)]"
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease }}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                >
+                  <div className="flex gap-1">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <Star key={idx} size={16} className="fill-[#f5a623] text-[#f5a623]" />
+                    ))}
+                  </div>
+                  <p className="mt-4 flex-1 text-[14px] leading-7 text-[#5a5364]">{t.quote}</p>
+                  <div className="mt-5 flex items-center gap-3 border-t border-[#f0edf4] pt-4">
+                    <img src={t.avatar} alt={t.name} className="h-11 w-11 rounded-full object-cover" />
+                    <div>
+                      <p className="text-[13px] font-extrabold text-[#0a0a0a]">{t.name}</p>
+                      <p className="text-[11px] font-semibold text-[#8a8292]">{t.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="pricing" className="scroll-mt-24 bg-[#2b1251] px-5 py-16 text-white sm:px-6 sm:py-20 lg:px-10 lg:py-24">
           <div className="mx-auto flex max-w-[1100px] flex-col items-start justify-between gap-8 sm:gap-10 lg:flex-row lg:items-center">
             <motion.div
@@ -370,6 +458,54 @@ function LandingPage() {
               </motion.button>
             </motion.div>
           </div>
+        </section>
+
+        <section id="get-started" className="scroll-mt-24 mx-auto max-w-[1240px] px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
+          <motion.div
+            className="relative overflow-hidden rounded-[32px] bg-[#4f008c] px-6 py-14 text-center sm:px-10 sm:py-16 lg:py-20"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6, ease }}
+          >
+            <div className="pointer-events-none absolute -right-20 -top-20 h-[300px] w-[300px] rounded-full bg-white/5 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-16 h-[280px] w-[280px] rounded-full bg-white/5 blur-2xl" />
+            <div className="relative">
+              <div className="mx-auto mb-6 flex max-w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-white">
+                <Zap size={14} /> Ready when you are
+              </div>
+              <h2 className="mx-auto max-w-[640px] text-[32px] font-extrabold leading-[1.1] tracking-[-0.04em] text-white sm:text-[40px] sm:leading-[1.08] sm:tracking-[-0.05em] lg:text-[52px]">
+                Your properties deserve better software.
+              </h2>
+              <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-7 text-[#e0d0f0] sm:mt-6 sm:text-[16px] sm:leading-8">
+                Join thousands of hosts who replaced spreadsheets and inbox chaos with one calm dashboard.
+              </p>
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                <motion.button
+                  onClick={() => navigate('/signup')}
+                  className="inline-flex items-center justify-center gap-3 rounded-xl bg-white px-7 py-3.5 text-[15px] font-bold text-[#4f008c] shadow-[0_12px_24px_rgba(0,0,0,0.15)] transition hover:bg-[#f5f0ff]"
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Start for free <ArrowRight size={17} />
+                </motion.button>
+                <motion.a
+                  href="#pricing"
+                  onClick={(e) => scrollToSection(e, 'pricing')}
+                  className="inline-flex items-center justify-center gap-3 rounded-xl border border-white/30 px-7 py-3.5 text-[15px] font-bold text-white transition hover:border-white/60 hover:bg-white/10"
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  View pricing
+                </motion.a>
+              </div>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[12px] font-bold text-[#e0d0f0] sm:text-[13px]">
+                <span className="flex items-center gap-2"><Check size={16} /> 14-day free trial</span>
+                <span className="flex items-center gap-2"><Check size={16} /> No credit card needed</span>
+                <span className="flex items-center gap-2"><Check size={16} /> Cancel anytime</span>
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         <section id="about" className="scroll-mt-24 mx-auto max-w-[900px] px-5 py-16 sm:px-6 sm:py-20 lg:py-28">
