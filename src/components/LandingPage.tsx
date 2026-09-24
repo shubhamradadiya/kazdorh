@@ -441,9 +441,8 @@ function LandingPage() {
               ]}
             />
           </div>
-          <div className="mt-12 flex flex-col justify-between gap-3 border-t border-[#eeeaf2] pt-6 text-[12px] font-semibold text-[#958d9e] sm:mt-14 sm:flex-row sm:gap-4">
+          <div className="mt-12 border-t border-[#eeeaf2] pt-6 text-center text-[12px] font-semibold text-[#958d9e] sm:mt-14">
             <p>© 2025 Nestrix, Inc. All rights reserved.</p>
-            <p>Property tools for vacation and long-term hosts.</p>
           </div>
         </div>
       </footer>
