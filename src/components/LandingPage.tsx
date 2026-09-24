@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowRight,
   BarChart3,
@@ -29,31 +29,21 @@ const rentalInteriorImage =
   'https://images.pexels.com/photos/7745932/pexels-photo-7745932.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
 
 const testimonials = [
-  {
-    name: 'Marcus Reid',
-    role: 'Host · 12 properties',
-    avatar: 'https://images.pexels.com/photos/5308640/pexels-photo-5308640.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
-    quote: 'I used to spend Sundays reconciling spreadsheets. Now it takes ten minutes a week and my Sundays are mine again.',
-  },
-  {
-    name: 'Daniel Osei',
-    role: 'Co-host · 6 properties',
-    avatar: 'https://images.pexels.com/photos/14950779/pexels-photo-14950779.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
-    quote: 'The guest messaging alone pays for itself. My reviews mention how fast I reply, and that drives more bookings.',
-  },
-  {
-    name: 'Peter Langford',
-    role: 'Property manager · 30 units',
-    avatar: 'https://images.pexels.com/photos/35490803/pexels-photo-35490803.jpeg?auto=compress&cs=tinysrgb&h=120&w=120',
-    quote: 'We onboarded our whole portfolio in an afternoon. The team access means my cleaners see what they need, nothing more.',
-  },
+  { name: 'Marcus Reid', role: 'Host · 12 properties', rating: 5, avatar: 'https://images.pexels.com/photos/5308640/pexels-photo-5308640.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'I used to spend Sundays reconciling spreadsheets. Now it takes ten minutes a week and my Sundays are mine again.' },
+  { name: 'Daniel Osei', role: 'Co-host · 6 properties', rating: 5, avatar: 'https://images.pexels.com/photos/14950779/pexels-photo-14950779.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'The guest messaging alone pays for itself. My reviews mention how fast I reply, and that drives more bookings.' },
+  { name: 'Peter Langford', role: 'Property manager · 30 units', rating: 4.5, avatar: 'https://images.pexels.com/photos/35490803/pexels-photo-35490803.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'We onboarded our whole portfolio in an afternoon. The team access means my cleaners see what they need, nothing more.' },
+  { name: 'Sofia Marchetti', role: 'Host · 4 properties', rating: 5, avatar: 'https://images.pexels.com/photos/7752788/pexels-photo-7752788.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'Booking sync used to be a nightmare. Now everything stays aligned and I have not had a double booking in months.' },
+  { name: 'Amara Bello', role: 'Host · 8 properties', rating: 4.5, avatar: 'https://images.pexels.com/photos/33680700/pexels-photo-33680700.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'The dashboard is the first thing I open every morning. I know exactly what needs attention before my coffee is done.' },
+  { name: 'Lena Park', role: 'Co-host · 15 properties', rating: 5, avatar: 'https://images.pexels.com/photos/16160809/pexels-photo-16160809.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'My cleaning team gets automatic notifications after every checkout. No more texting back and forth about schedules.' },
+  { name: 'Kaleef Mensah', role: 'Host · 3 properties', rating: 4.5, avatar: 'https://images.pexels.com/photos/35681211/pexels-photo-35681211.jpeg?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'I finally stopped losing track of payments. Everything is in one place and I can see my revenue at a glance.' },
+  { name: 'Nadia Hassan', role: 'Property manager · 22 units', rating: 5, avatar: 'https://images.pexels.com/photos/37272329/pexels-photo-37272329.png?auto=compress&cs=tinysrgb&h=120&w=120', quote: 'The reporting is clear without being overwhelming. My owners love the monthly summaries I can export in two clicks.' },
 ];
 
 const stats = [
-  { value: '12k+', label: 'Properties managed' },
-  { value: '4.9/5', label: 'Average host rating' },
-  { value: '38%', label: 'Avg. time saved weekly' },
-  { value: '99.9%', label: 'Uptime guarantee' },
+  { value: 12000, suffix: '+', label: 'Properties managed' },
+  { value: 4.9, suffix: '/5', label: 'Average host rating', decimals: 1 },
+  { value: 38, suffix: '%', label: 'Avg. time saved weekly' },
+  { value: 99.9, suffix: '%', label: 'Uptime guarantee', decimals: 1 },
 ];
 
 const faqs: [string, string][] = [
@@ -289,17 +279,7 @@ function LandingPage() {
         <section className="mx-auto max-w-[1150px] px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
           <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
             {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: i * 0.1, ease }}
-              >
-                <p className="text-[32px] font-extrabold tracking-[-0.04em] text-[#4f008c] sm:text-[40px] lg:text-[48px]">{stat.value}</p>
-                <p className="mt-1 text-[12px] font-bold text-[#7c7585] sm:text-[14px]">{stat.label}</p>
-              </motion.div>
+              <CountUpStat key={stat.label} {...stat} delay={i * 0.1} />
             ))}
           </div>
         </section>
@@ -379,28 +359,38 @@ function LandingPage() {
           </div>
         </section>
 
-        <section id="testimonials" className="scroll-mt-24 border-y border-[#eee9f3] bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
-          <div className="mx-auto max-w-[1150px]">
+        <section id="testimonials" className="scroll-mt-24 overflow-hidden border-y border-[#eee9f3] bg-white py-16 sm:py-20 lg:py-28">
+          <div className="mx-auto max-w-[1150px] px-5 sm:px-6 lg:px-10">
             <SectionHeading
               eyebrow="Loved by hosts"
               title={<>Don't take our word <span className="text-[#4f008c]">for it.</span></>}
               subtitle="Thousands of hosts trust Nestrix to keep their properties running smoothly."
             />
-            <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((t, i) => (
-                <motion.div
-                  key={t.name}
-                  className="flex flex-col rounded-2xl border border-[#ece7f1] bg-[#fdfcff] p-6 transition hover:border-[#cdb2e7] hover:shadow-[0_16px_30px_rgba(79,0,140,0.08)]"
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.5, delay: i * 0.1, ease }}
-                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+          </div>
+          <div className="relative mt-14">
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent sm:w-32" />
+            <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent sm:w-32" />
+            <motion.div
+              className="flex gap-4"
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+            >
+              {[...testimonials, ...testimonials].map((t, i) => (
+                <div
+                  key={`${t.name}-${i}`}
+                  className="flex w-[300px] shrink-0 flex-col rounded-2xl border border-[#ece7f1] bg-[#fdfcff] p-6 sm:w-[360px]"
                 >
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <Star key={idx} size={16} className="fill-[#f5a623] text-[#f5a623]" />
-                    ))}
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <Star
+                          key={idx}
+                          size={16}
+                          className={idx < Math.floor(t.rating) ? 'fill-[#f5a623] text-[#f5a623]' : idx < t.rating ? 'fill-[#f5a623]/50 text-[#f5a623]' : 'text-[#e5e0ea]'}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-[12px] font-extrabold text-[#4f008c]">{t.rating.toFixed(1)}</span>
                   </div>
                   <p className="mt-4 flex-1 text-[14px] leading-7 text-[#5a5364]">{t.quote}</p>
                   <div className="mt-5 flex items-center gap-3 border-t border-[#f0edf4] pt-4">
@@ -410,9 +400,9 @@ function LandingPage() {
                       <p className="text-[11px] font-semibold text-[#8a8292]">{t.role}</p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -583,6 +573,46 @@ function LandingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function CountUpStat({ value, suffix, label, decimals = 0, delay }: { value: number; suffix: string; label: string; decimals?: number; delay: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-50px' });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let frame: number;
+    const start = performance.now();
+    const duration = 1600;
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(value * eased);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, value]);
+
+  const formatted = display >= 1000
+    ? `${Math.round(display / 100) / 10}k`
+    : display.toFixed(decimals);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="text-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay, ease }}
+    >
+      <p className="text-[32px] font-extrabold tracking-[-0.04em] text-[#4f008c] sm:text-[40px] lg:text-[48px]">
+        {formatted}{suffix}
+      </p>
+      <p className="mt-1 text-[12px] font-bold text-[#7c7585] sm:text-[14px]">{label}</p>
+    </motion.div>
   );
 }
 
